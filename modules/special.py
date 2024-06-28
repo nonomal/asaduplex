@@ -36,21 +36,34 @@ def ignored(
 
 async def base_comment(store: Store,
 	accepted_dates: Iterable[str],
+	force_return: bool,
 	results_dict: dict[str, dict[str, str]],
 	timeout: int, session: Optional[SessionType]) -> dict[str, dict[str, str]]:
+	try:
+		assert store.region.url_store is not None
+		assert store.region.part_sample
+		assert store.region.apu
+	except:
+		if force_return:
+			return {store.rid: {}}
+		return {}
 	base = f"https://www.apple.com{store.region.url_store}"
 	url = f"{base}/shop/fulfillment-messages"
-	target = f"MUQ93{store.region.part_sample}/A"
-	referer = browser_agent | {"Referer": f"{base}/shop/product/{target}"}
-	params = {"searchNearby": "true", "store": store.rid, "parts.0": target}
+	referer = browser_agent | {"Referer": f"{base}/shop/product/{store.region.part_sample}"}
+	params = {"searchNearby": "true", "store": store.rid, "parts.0": store.region.part_sample}
 
 	stores: list[dict] = []
 	r = await request(url, session, headers = referer, timeout = timeout,
 		params = params, raise_for_status = True, mode = "json")
-	stores = r["body"]["content"]["pickupMessage"]["stores"]
+	try:
+		stores = r["body"]["content"]["pickupMessage"]["stores"]
+	except KeyError:
+		return results_dict
 	for rstore in stores:
+		rid = rstore["storeNumber"]
+		if force_return:
+			results_dict.setdefault(rid, {})
 		for holiday in rstore["retailStore"]["storeHolidays"]:
-			rid = rstore["storeNumber"]
 			raw = datetime.strptime(f"{holiday["date"]} 2000", "%b %d %Y")
 			try:
 				raw = raw.replace(year = datetime.now().year)
@@ -60,12 +73,13 @@ async def base_comment(store: Store,
 			date_str = raw.strftime("%F")
 			if accepted_dates and date_str not in accepted_dates:
 				continue
-			text = " ".join(i for i in (f"[{holiday["description"] or ""}]", holiday["comments"]) if i)
+			text = f"{f"[{d}] " if (d := holiday["description"]) else ""}{holiday["comments"] or ""}"
 			results_dict.setdefault(rid, {})[date_str] = text
 	return results_dict
 
 async def comment(store: Store,
 	accepted_dates: Iterable[str] = [],
+	force_return: bool = False,
 	results_dict: dict[str, dict[str, str]] = {},
 	session: Optional[SessionType] = None,
 	max_retry: int = 3, timeout: int = 5,
@@ -74,7 +88,7 @@ async def comment(store: Store,
 	@AsyncRetry(max_retry)
 	async def decorate() -> dict[str, dict[str, str]]:
 		try:
-			return await base_comment(store, accepted_dates, results_dict, timeout, session)
+			return await base_comment(store, accepted_dates, force_return, results_dict, timeout, session)
 		except Exception as exp:
 			await sleep(randint(min_interval, max_interval))
 			raise RetrySignal(exp)

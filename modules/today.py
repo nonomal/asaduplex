@@ -55,8 +55,8 @@ class utils:
 	@staticmethod
 	def known_slugs() -> list[str]:
 		try:
-			with open("Retail/savedEvent.json") as r:
-				assure = json.load(r)["assure"]
+			with open("Retail/assured-events.json") as r:
+				assure = json.load(r)
 			return list(assure.values())
 		except FileNotFoundError:
 			return []
@@ -164,9 +164,11 @@ class Store(TodayObject):
 			self.raw_store: Raw_Store = temp
 			self.sid: str = self.raw_store.rid
 			self.name: str = self.raw_store.name
+			assert self.raw_store.slug and self.raw_store.url, "本地数据库信息不正确"
 			self.slug: str = self.raw_store.slug
 			self.rootPath: str = rootPath or self.raw_store.region.url_taa
-			self.timezone: str = self.raw_store.timezone
+			assert self.raw_store.timezone, "本地数据库时区不正确"
+			self.timezone: str = self.raw_store.timezone.key
 			self.flag: str = todayNation[self.rootPath]
 			self.url: str = self.raw_store.url
 			self.coord: Optional[list[float]] = None
@@ -377,7 +379,7 @@ class Course(TodayObject):
 		async with get_session(session) as session:
 			tasks = (self.getSchedules(Store(store = i, rootPath = rootPath),
 				ensure = not fast, date = date, session = session, semaphore = semaphore) for i in stores)
-			results = await asyncio.gather(*tasks, return_exceptions = True)
+			results = await AsyncGather(tasks, return_exceptions = True)
 		return sorted({i for j in (r for r in results if not isinstance(r, BaseException)) for i in j})
 
 	async def getSingleSchedule(self, session: Optional[SessionType] = None) -> "Schedule":
@@ -566,7 +568,7 @@ class Collection(TodayObject):
 		async with get_session(session) as session:
 			tasks = (self.getSchedules(Store(store = i, rootPath = rootPath),
 				ensure = not fast, date = date, session = session, semaphore = semaphore) for i in stores)
-			results = await asyncio.gather(*tasks, return_exceptions = True)
+			results = await AsyncGather(tasks, return_exceptions = True)
 		return sorted({i for j in (r for r in results if not isinstance(r, BaseException)) for i in j})
 
 	async def getCourses(self, rootPath: Optional[str] = None, fast: bool = False,
@@ -631,7 +633,7 @@ class Sitemap(TodayObject):
 	async def getObjects(self, session: Optional[SessionType] = None) -> list[Collection | Course | Schedule]:
 		semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
 		async with get_session(session) as session:
-			results = await asyncio.gather(*(getURL(u, session = session, semaphore = semaphore)
+			results = await AsyncGather((getURL(u, session = session, semaphore = semaphore)
 				for u in await self.getURLs()), return_exceptions = True)
 		return [i for i in results if not isinstance(i, BaseException)]
 
@@ -739,11 +741,11 @@ def teleinfo(
 	collection: Optional[Collection] = None,
 	mode: str = "new",
 	userLang: bool = True,
-	prior: list[str] = []) -> tuple[str, str, list[list[list[str]]]]:
+	prior: Sequence[str] = []) -> tuple[str, str, list[list[list[str]]]]:
 
 	runtime = datetime.now()
 	offset = (runtime.astimezone().utcoffset() or timedelta()).total_seconds() / 3600
-	priorlist = prior + list(Regions)
+	priorlist = (*prior, *Regions)
 
 	if collection is not None:
 		text = disMarkdown(lang[userLang]["MAIN1"].format(

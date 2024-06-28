@@ -1,0 +1,30 @@
+name: Today at Apple [Normal]
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v4
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: install python packages
+        run: pip install -r requirements.txt
+      - name: execute py script
+        env:
+          BOTPOST_API: ${{ secrets.BOTPOST_API }}
+          BOTPOST_CHAT_ID: ${{ secrets.BOTPOST_CHAT_ID }}
+        run: python3 Today.py -d
+      - name: commit files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'auto: Today at Apple'

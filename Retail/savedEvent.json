@@ -1,5 +1,5 @@
 {
-  "update": "2024-06-06 00:14:36",
+  "update": "2024-06-24 02:00:32",
   "today": {
     "6443623163745894793": {
       "names": {
@@ -272,7 +272,8 @@
     "7180717985828274432": {
       "names": {
         "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作个性化文档",
-        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作個人化的文件"
+        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作個人化的文件",
+        "🇯🇵": "はじめよう：MacやiPadでオリジナリティあふれるドキュメントを作成しよう"
       },
       "slug": "get-started-create-personalized-documents-mac-ipad"
     },
@@ -285,7 +286,9 @@
     },
     "7181084018103648512": {
       "names": {
-        "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作有感染力的演示文稿"
+        "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作有感染力的演示文稿",
+        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作超強簡報",
+        "🇲🇴": "輕鬆上手：在 Mac 和 iPad 上製作超強簡報"
       },
       "slug": "get-started-make-powerful-presentations-mac-ipad"
     },
@@ -400,51 +403,30 @@
         "🇭🇰": "聚焦： 聽黃家正用古典樂奏出人生"
       },
       "slug": "spotlight-kajeng-wong-061924"
-    }
-  },
-  "sitemap": {
+    },
     "7202158586670514688": {
       "names": {
         "🇯🇵": "スポットライト：木本奏太に学ぶ、自分らしく生きるための表現方法"
       },
       "slug": "spotlight-kanata-kimoto-062024"
+    },
+    "7204311431263978752": {
+      "names": {
+        "🇨🇳": "艺术漫游：跟着 Handowin 描绘 Apple 浦东的活力新面貌"
+      },
+      "slug": "art-tour-handowin-062024"
+    },
+    "7206142008959075328": {
+      "names": {
+        "🇨🇳": "焦点：陈卓璇"
+      },
+      "slug": "spotlight-chen-zhuoxuan-061924"
     }
   },
+  "sitemap": {},
   "collection": {
     "kids-code-with-apple": {
       "🇯🇵": "Code with Apple - 子ども向け"
     }
-  },
-  "assure": {
-    "6443623163745894793": "music-skills-getting-started-garageband",
-    "6443627468649497481": "coding-skills-getting-started-swift-playgrounds",
-    "6444982776110088837": "video-skills-getting-started-imovie",
-    "6447624726684467553": "music-labs-making-theme-song",
-    "6455123986703286881": "art-lab-kids-drawing-emoji",
-    "6456668175656125061": "product-skills-accessibility-vision-loss",
-    "6456668939250140553": "product-skills-learning-literacy",
-    "6456669721362006917": "product-skills-accessibility-reduced-mobility",
-    "6456670232358257769": "product-skills-accessibility-hard-of-hearing",
-    "6456670804285162629": "product-skills-accessibility-deaf-community",
-    "6456671562162341225": "product-skills-using-voiceover-iphone-ipad",
-    "6456672052476478305": "product-skills-voiceover-mac",
-    "6858951078987006409": "virtual-session-for-kids-learn-to-code-1",
-    "6858953608756298441": "virtual-session-for-kids-learn-to-code-2",
-    "6858954953836036449": "virtual-session-for-kids-lights-camera-code",
-    "6871610251075748217": "skills-your-kids-and-their-devices",
-    "6935143355421393229": "video-tour-capturing-cinematic-shots",
-    "6937477895578026701": "photo-tour-portraits-on-location",
-    "6937543655042154953": "photo-tour-framing-architecture",
-    "6978470336413925785": "coding-lab-code-your-first-app",
-    "6980220449524122013": "virtual-session-create-powerful-presentations-keynote-2",
-    "6998886952200929536": "skills-taking-charge-privacy-on-iphone",
-    "7079594530974826752": "get-started-ipad",
-    "7079597360792043776": "get-started-mac",
-    "7079604719065071872": "get-started-iphone",
-    "7080116838067962112": "workshop-drawing-with-apple-pencil-on-ipad",
-    "7080296783197077760": "workshop-photography-on-iphone",
-    "7132826764783223552": "get-started-apple-watch-112723",
-    "7151722304698679808": "video-tour-capturing-cinematic-shots-0210224",
-    "7182699014352896256": "workshop-video-on-iphone-row"
   }
 }

@@ -3,101 +3,95 @@ import re
 from collections.abc import Callable
 from datetime import UTC, datetime
 from enum import Enum
-from modules.regions import Regions
-from modules.util import SessionType, browser_agent, request
-from pathlib import PurePath
-from typing import Any, Literal, Optional, Required, TypedDict
+from pathlib import Path
+from typing import Any, Required, TypedDict
 from zoneinfo import ZoneInfo
 
-DEFAULTFILE = PurePath(__file__).with_suffix(".json")
+from modules.regions import Regions
+from modules.util import SessionType
+
+DEFAULTFILE = Path(__file__).with_suffix(".json")
 type StoreMapping = Callable[[Store], Any]
 
 class StoreDict(TypedDict, total = False):
-	alter: str
 	city: Required[str]
-	dates: str | list[str]
+	dieter: dict[str, str]
+	events: list[dict[str, str]]
 	flag: Required[str]
-	md5: str
-	modify: str
-	name: Required[str | list[str]]
+	keyword: list[str]
+	kiosk: int
+	name: Required[str]
+	name_alt: list[str]
+	name_eng: str
+	nso: str
+	slug: str
 	state: Required[str]
 	status: str
 	timezone: str
-	website: str
+
+class FileDict(TypedDict):
+	_: str
+	stores: dict[str, StoreDict]
 
 class SortKey(Enum):
 	default = ""
 	id = "id"
 	index = "index"
+	latest = "latest"
 
-STORES: dict[str, "Store"] = {}
+STORES: dict[str, Store] = {}
 
 class Store:
-	def __init__(self, sid: int | str, dct: StoreDict) -> None:
-		self.sid = f"{sid:0>3}"
+	REQUIRED_KEYS = "city", "flag", "name", "state"
+
+	def __init__(self, rid: str, dct: StoreDict) -> None:
+		for k in self.REQUIRED_KEYS:
+			assert k in dct, f"Key {k!r} is required"
+
+		self.rid = rid
+		self.sid = self.rid.removeprefix("R")
 		assert len(self.sid) == 3, "Invalid Store ID"
-		self.rid = f"R{self.sid}"
-		self.iid = int(self.sid)
-		assert "flag" in dct, 'Key "flag" missed'
-		self.flag = dct["flag"]
 
-		assert "name" in dct, 'Key "name" missed'
-		name = dct["name"]
-		if isinstance(name, list):
-			self.altname: list[str] = name.copy()
-			self.name: str = self.altname.pop(0)
+		self.city = dct["city"]
+		if "dieter" in dct:
+			self.md5 = dct["dieter"]["md5"]
+			self.modify = dct["dieter"]["modify"]
 		else:
-			self.altname = []
-			self.name = name
+			self.md5 = self.modify = None
+		events = dct.get("events", [])
+		self.events = [(dt, typ) for event in events for dt, typ in event.items()]
+		self.flag = dct["flag"]
+		self.keyword = dct.get("keyword", [])
+		self.kiosk = dct.get("kiosk")
+		self.name = dct["name"]
+		self.name_alt = dct.get("name_alt", [])
+		self.name_eng = dct.get("name_eng", self.name)
+		self.nso = dct.get("nso")
+		self.slug = dct.get("slug")
+		self.state = dct["state"]
+		self.status = (dct.get("status", "")).capitalize()
+		self.timezone = ZoneInfo(dct["timezone"]) if "timezone" in dct else None
+		self.raw: dict[str, Any] = dict(dct)
 
-		trans_table = {"closed": "关闭", "future": "招聘", "internal": "内部"}
-		self.status: str = (dct.get("status") or "").capitalize()
 		self.isClosed = self.status == "Closed"
 		self.isFuture = self.status == "Future"
 		self.isInternal = self.status == "Internal"
-		self.isOpen = not (self.isClosed or self.isFuture or self.isInternal)
-
-		if "timezone" in dct:
-			self.timezone = dct["timezone"]
-		if "dates" in dct:
-			assert "timezone" in dct, 'Key "timezone" missed'
-			raw_dates = dct["dates"]
-			timezone = ZoneInfo(self.timezone)
-			if isinstance(raw_dates, list):
-				self.dates: list[str] = raw_dates
-				self.nso: str = raw_dates[0]
-			else:
-				self.dates: list[str] = [raw_dates]
-				self.nso: str = raw_dates
-			self.index = (datetime.strptime(self.nso, "%Y-%m-%d").replace(tzinfo = timezone), self.isInternal, self.sid)
+		self.isOpen = not any((self.isClosed, self.isFuture, self.isInternal))
+		if self.nso and self.timezone:
+			self.index = datetime.strptime(self.nso, "%Y-%m-%d %H:%M").replace(tzinfo = self.timezone), self.isInternal, self.sid
 		else:
-			self.index = (datetime.max.replace(tzinfo = UTC), self.isInternal, self.sid)
-		if "md5" in dct:
-			self.md5 = dct["md5"]
-		if "modify" in dct:
-			self.modify = dct["modify"]
-
-		assert "state" in dct, 'Key "state" missed'
-		self.state = dct["state"]
-		assert "city" in dct, 'Key "city" missed'
-		self.city = dct["city"]
+			self.index = datetime.max.replace(tzinfo = UTC), self.isInternal, self.sid
 		self.region = Regions[self.flag]
-		if "website" in dct:
-			self.slug = dct["website"] or self.name.lower().replace(" ", "")
-			self.url = f"https://www.apple.com{self.region.url_retail}/retail/{self.slug}"
-			self.detail_url = f"https://www.apple.com/rsp-web/store-detail?storeSlug={self.slug}&locale={self.region.locale}&sc=false"
-
-		keys: list[str] = [
-			self.name, self.state, self.city, self.flag, *self.altname,
-			*dct.get("alter", "").split(" "),
-			getattr(self, "slug", ""),
-			self.region.name, self.region.name_eng, self.region.abbr, *self.region.name_alter,
-			*([dct["status"].capitalize(), trans_table[dct["status"]]] if "status" in dct else [])]
-		self.keys = [i for i in keys if i]
-		self.keys.extend(k.replace(" ", "") for k in self.keys if " " in k)
-
+		url = "https://www.apple.com{}/retail/{}"
+		self.url = url.format(self.region.url_retail, self.slug) if self.slug else None
 		self.sortkey = (self.flag, self.state, self.city, self.sid)
-		self.raw: dict[str, Any] = dict(dct)
+
+		statuses = {"Closed": "关闭", "Future": "招聘", "Internal": "内部", "": ""}
+		keys = [self.name, self.name_eng, self.state, self.city, self.flag,
+			*self.name_alt, *self.keyword, self.slug or "", self.status, statuses[self.status],
+			self.region.name, self.region.name_eng, self.region.abbr, *self.region.name_alt]
+		keys.extend(i.replace(" ", "") for i in keys if " " in i)
+		self.keys = [i for i in keys if i]
 
 	@property
 	def dieter(self) -> str:
@@ -136,51 +130,44 @@ class Store:
 	def __hash__(self) -> int:
 		return hash(self.sortkey)
 
-	async def detail(self,
-		mode: Optional[Literal["dict", "hours", "raw"]] = None,
-		session: Optional[SessionType] = None,
-		raise_exception: bool = False) -> dict[str, Any]:
-		try:
-			r = await request(self.detail_url, session,
-				headers = browser_agent,
-				retry = 3, timeout = 5, mode = "json")
-			if mode == "raw":
-				return r
-			else:
-				hours = {
-					"isnso": r["hours"]["isNSO"],
-					"regular": r["hours"]["hoursData"],
-					"special": r["hours"]["specialHoursData"]}
-				if mode == "hours":
-					return hours
-				add = r["address"]
-				address = ", ".join(a.strip() for a in [add["address1"], add["address2"]] if a)
-				province = ", ".join(a.strip() for a in [add["city"], add["stateName"], add["postal"]] if a)
-				info = {"timezone": r["timezone"], "telephone": r["telephone"], "address": address, "province": province}
-				return r["geolocation"] | info | hours
-		except:
-			if raise_exception:
-				raise
-			return {}
+	def dumps(self) -> dict[str, Any]:
+		kept_attrs = "city", "flag", "keyword", "kiosk", "name", "name_alt", "nso", "slug", "state"
+		d = {k: v for k in kept_attrs if (v := getattr(self, k)) or k in self.REQUIRED_KEYS}
+		if self.md5 and self.modify:
+			d["dieter"] = {"md5": self.md5, "modify": self.modify}
+		if self.events:
+			d["events"], last_key = [{}], None
+			for date, type in self.events:
+				if date == last_key:
+					d["events"].append({})
+				d["events"][-1][date] = type
+				last_key = date
+		if self.name_eng != self.name:
+			d["name_eng"] = self.name_eng
+		if self.status:
+			d["status"] = self.status.lower()
+		if self.timezone:
+			d["timezone"] = self.timezone.key
+		return d
 
-	def nsoString(self, userLang: bool = True) -> str:
-		if not hasattr(self, "dates"):
-			return ""
-		lang = {True: {"OPENED": "首次开幕于 {}", "REOPEN": "重新开幕于 {}", "CLOSED": "结束营业于 {}", "FORMAT": "%Y 年 %-m 月 %-d 日"},
-			False: {"OPENED": "Opened on {}", "REOPEN": "Reopened on {}", "CLOSED": "Closed on {}", "FORMAT": "%b %-d, %Y"}}
-		localize = lambda dt, userLang: datetime.strptime(dt, "%Y-%m-%d").strftime(lang[userLang]["FORMAT"])
-		info = [lang[userLang]["OPENED"].format(localize(self.dates[0], userLang))]
-		for d in self.dates[1 : -1 if self.isClosed else None]:
-			info.append(lang[userLang]["REOPEN"].format(localize(d, userLang)))
-		if self.isClosed:
-			info.append(lang[userLang]["CLOSED"].format(localize(self.dates[-1], userLang)))
-		return "\n".join(info)
+	async def detail(self, session: SessionType | None = None) -> dict[str, Any]:
+		assert self.slug, "slug must be provided"
+
+		from graphql import APOLLO_HEADERS, ENDPOINT, cleanup, generate_params
+		from modules.util import browser_agent, request
+
+		params = generate_params("StoreDetails", {"localeId": self.region.locale, "slug": self.slug})
+		r = await request(ENDPOINT + params, session, mode = "json",
+			headers = APOLLO_HEADERS | browser_agent | {"referer": self.url})
+		return cleanup(r["data"]["localeFields"]["storeBySlug"])
 
 def StoreID(sid: int | str, fuzzy: Any = False, regular: Any = False) -> list[Store]:
 	if sid == "ALL":
 		return list(STORES.values())
 	try:
 		assert sid
+		if sid == "XXX":
+			return [STORES["XXX"]]
 		if regular:
 			return [i for i in STORES.values() if re.search(str(sid), i.rid)]
 		elif fuzzy:
@@ -205,14 +192,20 @@ def StoreMatch(keyword: str, fuzzy: Any = False, regular: Any = False) -> list[S
 		return [i for i in STORES.values() if any(keyword.lower() in k.lower() for k in i.keys)]
 	return [i for i in STORES.values() if keyword.lower() in (k.lower() for k in i.keys)]
 
-def getStore(sid: int | str) -> Optional[Store]:
-	return STORES.get(sidify(sid))
+def getStore(sid: int | str) -> Store | None:
+	try:
+		return STORES[sidify(sid)]
+	except KeyError:
+		try:
+			return storeReturn(sid)[0]
+		except IndexError:
+			pass
 
 def nameReplace(rstores: list[Store], bold: bool = False, number: bool = True,
+	levels: list[str] = ["flag", "state", "city"],
 	final: Callable[[Store], str] = str,
-	userLang: Optional[bool | list[Optional[bool]]] = [None]) -> list[str]:
+	userLang: bool | None | list[bool | None] = [None]) -> list[str]:
 	stores, results = set(rstores), []
-	levels = ["flag", "state", "city"]
 	boldmark = "*" if bold else ""
 	userLang = [userLang] if not isinstance(userLang, list) else userLang
 
@@ -232,13 +225,13 @@ def nameReplace(rstores: list[Store], bold: bool = False, number: bool = True,
 	results.extend(final(s) for s in sorted(stores))
 	return results
 
-def reloadJSON(filename: str | PurePath = DEFAULTFILE) -> str:
+def reloadJSON(filename: str | Path = DEFAULTFILE) -> str:
 	with open(filename) as r:
-		infoJSON = json.load(r)
-	update = infoJSON.pop("update")
-	for sid, dct in infoJSON.items():
-		STORES[sid] = Store(sid = sid, dct = dct)
-	return update
+		infoJSON: FileDict = json.load(r)
+	STORES.clear()
+	STORES.update({(inst := Store(rid = k, dct = v)).sid: inst
+		for k, v in infoJSON["stores"].items()})
+	return infoJSON["_"]
 
 def sidify(sid: int | str, *, R: bool = False, fill: bool = True) -> str:
 	return f"{"R" if R and fill else ""}{str(sid).upper().removeprefix("R"):{"0>3" if fill else ""}}"
@@ -252,16 +245,16 @@ def storeReturn(args: Any = None, *,
 	regular: Any = False,
 	split: Any = False,
 	sort: SortKey = SortKey.default,
-	filter: Optional[StoreMapping] = None,
+	filter: StoreMapping | None = None,
 	allow_empty: bool = True) -> list[Store]:
 	if not args and allow_empty:
 		args = "ALL"
 	if not isinstance(args, list):
 		args = re.split(r"\s*[,，]\s*", str(args)) if split else [args]
 	args = [str(a) for a in args]
-	gen = {g for s in args for m in (StoreID(s, fuzzy = fuzzy, regular = regular),
-		StoreMatch(s, fuzzy = fuzzy, regular = regular)) for g in m}
-	filters: list[Optional[StoreMapping]] = [
+	gen = {*m for s in args for m in (StoreID(s, fuzzy = fuzzy, regular = regular),
+		StoreMatch(s, fuzzy = fuzzy, regular = regular))}
+	filters: list[StoreMapping | None] = [
 		lambda i: not opening or i.isOpen,
 		lambda i: not remove_closed or not i.isClosed,
 		lambda i: not remove_future or not i.isFuture,
@@ -271,9 +264,15 @@ def storeReturn(args: Any = None, *,
 		case SortKey.default:
 			key: StoreMapping = lambda i: i
 		case SortKey.id:
-			key = lambda i: i.iid
+			key = lambda i: i.sid
 		case SortKey.index:
 			key = lambda i: i.index
+		case SortKey.latest:
+			def get_latest(i: Store) -> str:
+				accepted = ("nso", "rebuild", "move")
+				evnt = [d for d, e in i.events if e in accepted]
+				return max(i.nso or "_", max(evnt) if evnt else "0")
+			key = lambda i: (get_latest(i), i)
 	return sorted(answer, key = key)
 
 reloadJSON()

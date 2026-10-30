@@ -1,56 +1,58 @@
-from asyncio import sleep
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Generator, Iterable, Mapping
 from datetime import datetime, timedelta
-from random import randint
-from typing import Any, Literal, Optional
+from typing import Any, Literal
 
-from modules.util import (AsyncRetry, RetryExceeded, RetrySignal, SessionType,
-                          browser_agent, request)
+from tenacity import AsyncRetrying, stop_after_attempt, wait_random
+
+from modules.store import FulfillmentMessage, Product
+from modules.util import SessionType
 from storeInfo import Store
 
-dayOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+dayOfWeek = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
-def convert(dct: Mapping[str, Any], userLang: bool = True) -> str:
+def convert(dct: Mapping[str, Any], lang: bool = True) -> str:
 	match dct:
-		case {"closed": True}:
-			return "不营业" if userLang else "Closed"
-		case {"openTime": "00:00", "closeTime": "23:59"}:
-			return "24 小时营业" if userLang else "Always Open"
+		case {"openTime": "00:00:00", "closeTime": "23:59:00"}:
+			return "24 小时营业" if lang else "Always Open"
 		case {"openTime": opt, "closeTime": clt}:
-			return f"{opt} - {clt}"
+			return f"{opt[:5]} - {clt[:5]}"
+		case {"formattedTime": _}:
+			return "不营业" if lang else "Closed"
 		case _:
-			return "未知时间" if userLang else "Unknown Hours"
+			return "未知时间" if lang else "Unknown Hours"
 
-def ignored(
-	data: list[dict[str, Any]],
-	rules: dict[str, str],
-	userLang: bool = True) -> Iterator[tuple[str, str]]:
-	for item in sorted(data, key = lambda k: k["date"]):
-		converted = convert(item, userLang)
-		try:
-			for key in ("date", "name"):
-				assert converted != rules.get(item[key])
-		except:
+def ignored(converted: dict[str, str], rules: dict[str, str]) -> Generator[tuple[str, str]]:
+	for date, data in converted.items():
+		if rules.get(date) == data:
 			continue
-		yield item["date"], converted
+		if rules.get(dayOfWeek[datetime.strptime(date, "%Y-%m-%d").weekday()]) == data:
+			continue
+		yield date, data
 
 async def base_comment(store: Store,
 	accepted_dates: Iterable[str],
+	force_return: bool,
 	results_dict: dict[str, dict[str, str]],
-	timeout: int, session: Optional[SessionType]) -> dict[str, dict[str, str]]:
-	base = f"https://www.apple.com{store.region.url_store}"
-	url = f"{base}/shop/fulfillment-messages"
-	target = f"MUQ93{store.region.part_sample}/A"
-	referer = browser_agent | {"Referer": f"{base}/shop/product/{target}"}
-	params = {"searchNearby": "true", "store": store.rid, "parts.0": target}
-
-	stores: list[dict] = []
-	r = await request(url, session, headers = referer, timeout = timeout,
-		params = params, raise_for_status = True, mode = "json")
-	stores = r["body"]["content"]["pickupMessage"]["stores"]
-	for rstore in stores:
+	timeout: int, session: SessionType | None) -> dict[str, dict[str, str]]:
+	try:
+		assert store.region.url_store is not None
+		assert store.region.part_sample
+		assert store.region.apu
+		prod = Product(store.region.part_sample, store.region)
+	except:
+		if force_return:
+			return {store.rid: {}}
+		return {}
+	try:
+		await FulfillmentMessage(prod, store, search_nearby = True,
+			timeout = timeout, session = session, ensure = True)
+		assert prod.aos_data
+	except Exception:
+		return results_dict
+	for rid, rstore in prod.aos_data.items():
+		if force_return:
+			results_dict.setdefault(rid, {})
 		for holiday in rstore["retailStore"]["storeHolidays"]:
-			rid = rstore["storeNumber"]
 			raw = datetime.strptime(f"{holiday["date"]} 2000", "%b %d %Y")
 			try:
 				raw = raw.replace(year = datetime.now().year)
@@ -60,55 +62,54 @@ async def base_comment(store: Store,
 			date_str = raw.strftime("%F")
 			if accepted_dates and date_str not in accepted_dates:
 				continue
-			text = " ".join(i for i in (f"[{holiday["description"] or ""}]", holiday["comments"]) if i)
+			text = f"{f"[{d}] " if (d := holiday["description"]) else ""}{holiday["comments"] or ""}"
 			results_dict.setdefault(rid, {})[date_str] = text
 	return results_dict
 
 async def comment(store: Store,
 	accepted_dates: Iterable[str] = [],
+	force_return: bool = False,
 	results_dict: dict[str, dict[str, str]] = {},
-	session: Optional[SessionType] = None,
+	session: SessionType | None = None,
 	max_retry: int = 3, timeout: int = 5,
 	min_interval: int = 2, max_interval: int = 8,
 	shout: bool = False) -> dict[str, dict[str, str]]:
-	@AsyncRetry(max_retry)
-	async def decorate() -> dict[str, dict[str, str]]:
-		try:
-			return await base_comment(store, accepted_dates, results_dict, timeout, session)
-		except Exception as exp:
-			await sleep(randint(min_interval, max_interval))
-			raise RetrySignal(exp)
+
+	async def _request_impl() -> dict[str, dict[str, str]]:
+		return await base_comment(store, accepted_dates, force_return, results_dict, timeout, session)
+
 	try:
-		return await decorate()
-	except RetryExceeded as re:
+		retryer = AsyncRetrying(stop = stop_after_attempt(max_retry),
+			wait = wait_random(min_interval, max_interval), reraise = True)
+		return await retryer(_request_impl)
+	except Exception:
 		if not shout:
 			return results_dict
-		raise re.exp from None
+		raise
 
 async def special(store: Store, *,
-	threshold: Optional[datetime] = None,
+	threshold: datetime | None = None,
 	ask_comment: bool = True,
-	userLang: bool = True,
+	ignore_same: bool = False,
 	detail: dict[str, list[dict[str, Any]]] = {},
 	rules: dict[str, str] = {},
-	session: Optional[SessionType] = None) -> Optional[dict[str, dict[str, str]]]:
+	session: SessionType | None = None) -> dict[str, dict[str, str]] | None:
 	threshold = threshold or datetime.now()
 	if not detail:
-		try:
-			detail = await store.detail(session = session, mode = "hours")
-			assert isinstance(detail, dict)
-			for key in ("regular", "special"):
-				assert key in detail
-		except:
-			return
+		detail = await store.detail(session = session)
+	for key in ("hoursData", "specialHours"):
+		assert key in detail
 
 	comments, results, asked = {}, {}, []
-	regular = {dayOfWeek.index(regular["name"]): convert(regular, userLang = userLang) for regular in detail["regular"]}
-	for date, converted in ignored(detail["special"], rules = rules, userLang = userLang):
+	regular = {dayOfWeek.index(h["dayOfWeek"]): convert(h["time"]) for h in detail["hoursData"]}
+	converted = {d["date"]: convert(d["time"], lang = False) for d in detail["specialHours"]}
+	for date, converted in ignored(converted, rules = rules):
 		d = datetime.strptime(date, "%Y-%m-%d")
 		if date < f"{threshold:%F}":
 			continue
 		reg = regular[d.weekday()]
+		if ignore_same and reg == converted:
+			continue
 		try:
 			assert ask_comment
 			assert store.rid not in comments

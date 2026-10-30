@@ -1,10 +1,11 @@
 {
-  "update": "2024-06-06 00:14:36",
+  "update": "2026-10-30 13:43:07",
   "today": {
     "6443623163745894793": {
       "names": {
         "🇨🇳": "工作坊：用库乐队创作音乐",
         "🇭🇰": "工作坊：用 GarageBand 創作音樂",
+        "🇯🇵": "ワークショップ：GarageBandで音楽を作ろう",
         "🇲🇴": "工作坊：用 GarageBand 創作音樂",
         "🇹🇼": "工作坊：用 GarageBand 創作音樂"
       },
@@ -14,6 +15,7 @@
       "names": {
         "🇨🇳": "工作坊：用 Swift Playgrounds 学编程",
         "🇭🇰": "工作坊：用 Swift Playgrounds 學習編碼",
+        "🇯🇵": "ワークショップ：Swift Playgroundsでコーディングを学ぼう",
         "🇲🇴": "工作坊：用 Swift Playgrounds 學習編碼",
         "🇹🇼": "工作坊：以 Swift Playgrounds 學習編碼"
       },
@@ -48,94 +50,6 @@
         "🇹🇼": "工作坊：打造自己的表情符號"
       },
       "slug": "art-lab-kids-drawing-emoji"
-    },
-    "6456668175656125061": {
-      "names": {
-        "🇨🇳": "轻松入门：适用于视障人士的辅助功能",
-        "🇭🇰": "輕鬆上手：適用於視障人士的輔助使用功能",
-        "🇯🇵": "はじめよう：視覚に障がいがある方のためのアクセシビリティ機能",
-        "🇲🇴": "輕鬆上手：適用於視障人士的輔助使用功能",
-        "🇹🇼": "輕鬆上手：視覺障礙人士適用的輔助使用功能"
-      },
-      "slug": "product-skills-accessibility-vision-loss"
-    },
-    "6456668939250140553": {
-      "names": {
-        "🇨🇳": "轻松入门：学习与读写功能",
-        "🇭🇰": "輕鬆上手：學習與讀寫功能",
-        "🇯🇵": "はじめよう：学習と読み書きのためのアクセシビリティ機能",
-        "🇲🇴": "輕鬆上手：學習與讀寫功能",
-        "🇹🇼": "輕鬆上手：學習與讀寫能力功能"
-      },
-      "slug": "product-skills-learning-literacy"
-    },
-    "6456669721362006917": {
-      "names": {
-        "🇨🇳": "轻松入门：适用于行动不便人士的辅助功能",
-        "🇭🇰": "輕鬆上手：適用於行動不便人士的輔助使用功能",
-        "🇯🇵": "はじめよう：身体機能に障がいがある方のためのアクセシビリティ機能",
-        "🇲🇴": "輕鬆上手：適用於行動不便人士的輔助使用功能",
-        "🇹🇼": "輕鬆上手：行動不便人士適用的輔助使用功能"
-      },
-      "slug": "product-skills-accessibility-reduced-mobility"
-    },
-    "6456670232358257769": {
-      "names": {
-        "🇨🇳": "轻松入门：适用于听障人士的辅助功能",
-        "🇭🇰": "輕鬆上手：適用於聽障人士的輔助使用功能",
-        "🇯🇵": "はじめよう：耳が不自由な方のためのアクセシビリティ機能",
-        "🇲🇴": "輕鬆上手：適用於聽障人士的輔助使用功能",
-        "🇹🇼": "技巧：聽覺障礙人士適用的輔助使用功能"
-      },
-      "slug": "product-skills-accessibility-hard-of-hearing"
-    },
-    "6456670804285162629": {
-      "names": {
-        "🇨🇳": "轻松入门：适用于聋人社群的辅助功能",
-        "🇭🇰": "輕鬆上手：適用於聾人社群的輔助使用功能",
-        "🇯🇵": "はじめよう：聴覚に障がいがある方のためのアクセシビリティ機能",
-        "🇲🇴": "輕鬆上手：適用於聾人社群的輔助使用功能",
-        "🇹🇼": "輕鬆上手：聾人社群適用的輔助使用功能"
-      },
-      "slug": "product-skills-accessibility-deaf-community"
-    },
-    "6456671562162341225": {
-      "names": {
-        "🇨🇳": "轻松入门：使用 iPhone 和 iPad 的旁白功能",
-        "🇭🇰": "輕鬆上手：使用 iPhone 和 iPad 的旁白功能",
-        "🇯🇵": "はじめよう：iPhoneやiPadでVoiceOverを使ってみよう",
-        "🇲🇴": "輕鬆上手：使用 iPhone 和 iPad 的旁白功能",
-        "🇹🇼": "輕鬆上手：使用 iPhone 和 iPad 的「旁白」功能"
-      },
-      "slug": "product-skills-using-voiceover-iphone-ipad"
-    },
-    "6456672052476478305": {
-      "names": {
-        "🇨🇳": "轻松入门：使用 Mac 的旁白功能",
-        "🇭🇰": "輕鬆上手：使用 Mac 的旁白功能",
-        "🇲🇴": "輕鬆上手：使用 Mac 的旁白功能",
-        "🇹🇼": "輕鬆上手：使用 Mac 的「旁白」功能"
-      },
-      "slug": "product-skills-voiceover-mac"
-    },
-    "6587430270160175497": {
-      "names": {
-        "🇨🇳": "工作坊：从 Snoopy in Space 获得灵感，绘制你心中的宇航员",
-        "🇭🇰": "工作坊：以《史諾比上太空》為靈感繪畫你的太空人",
-        "🇯🇵": "ワークショップ：『スヌーピー 宇宙への道』で活躍する宇宙飛行士を描こう",
-        "🇲🇴": "工作坊：以《史諾比上太空》為靈感繪畫你的太空人",
-        "🇹🇼": "工作坊：以《史努比登上太空》為靈感畫出你的太空人"
-      },
-      "slug": "design-lab-draw-your-astronaut"
-    },
-    "6871610251075748217": {
-      "names": {
-        "🇨🇳": "轻松入门：孩子与设备",
-        "🇭🇰": "輕鬆上手：小朋友與裝置",
-        "🇲🇴": "輕鬆上手：小朋友與裝置",
-        "🇹🇼": "輕鬆上手：孩子與他們的裝置"
-      },
-      "slug": "skills-your-kids-and-their-devices"
     },
     "6935143355421393229": {
       "names": {
@@ -183,16 +97,6 @@
       },
       "slug": "coding-lab-code-your-first-app"
     },
-    "6980220449524122013": {
-      "names": {
-        "🇨🇳": "工作坊：用 Keynote 讲演制作有感染力的演示文稿 (在线课程)",
-        "🇭🇰": "工作坊：用 Keynote 製作超強簡報 (網上)",
-        "🇯🇵": "ワークショップ：Keynoteでパワフルなプレゼンテーションを作成しよう (オンライン)",
-        "🇲🇴": "工作坊：用 Keynote 製作超強簡報 (網上)",
-        "🇹🇼": "工作坊：用 Keynote 打造超強簡報 (線上)"
-      },
-      "slug": "virtual-session-create-powerful-presentations-keynote-2"
-    },
     "6998886952200929536": {
       "names": {
         "🇨🇳": "轻松入门：在 iPhone 上掌控你的隐私",
@@ -233,25 +137,11 @@
       },
       "slug": "get-started-iphone"
     },
-    "7080116838067962112": {
+    "7100940556235014400": {
       "names": {
-        "🇨🇳": "工作坊：在 iPad 上用 Apple Pencil 绘画",
-        "🇭🇰": "工作坊：在 iPad 上用 Apple Pencil 繪畫",
-        "🇯🇵": "ワークショップ：iPadとApple Pencilで絵を描こう",
-        "🇲🇴": "工作坊：在 iPad 上用 Apple Pencil 繪畫",
-        "🇹🇼": "工作坊：在 iPad 上用 Apple Pencil 畫畫"
+        "🇭🇰": "攝影漫遊：創作充滿張力的戲曲中心相片構圖"
       },
-      "slug": "workshop-drawing-with-apple-pencil-on-ipad"
-    },
-    "7080296783197077760": {
-      "names": {
-        "🇨🇳": "工作坊：用 iPhone 摄影",
-        "🇭🇰": "工作坊：用 iPhone 拍照",
-        "🇯🇵": "ワークショップ：iPhoneで写真を撮ろう",
-        "🇲🇴": "工作坊：用 iPhone 拍照",
-        "🇹🇼": "工作坊：用 iPhone 拍照"
-      },
-      "slug": "workshop-photography-on-iphone"
+      "slug": "photo-tour-compose-shots-xiqu-center"
     },
     "7110743073529626880": {
       "names": {
@@ -269,49 +159,42 @@
       },
       "slug": "get-started-apple-watch-112723"
     },
+    "7176782382111752448": {
+      "names": {
+        "🇨🇳": "工作坊：用 iPhone 拍视频",
+        "🇭🇰": "工作坊：用 iPhone 拍片",
+        "🇯🇵": "ワークショップ：iPhoneでビデオを撮影しよう"
+      },
+      "slug": "workshop-video-on-iphone"
+    },
     "7180717985828274432": {
       "names": {
         "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作个性化文档",
-        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作個人化的文件"
+        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作個人化的文件",
+        "🇯🇵": "はじめよう：MacやiPadでオリジナリティあふれるドキュメントを作成しよう",
+        "🇲🇴": "輕鬆上手：在 Mac 和 iPad 上製作個人化的文件",
+        "🇹🇼": "輕鬆上手：在 Mac 和 iPad 上打造個性化的文件"
       },
       "slug": "get-started-create-personalized-documents-mac-ipad"
     },
     "7181082021744967936": {
       "names": {
         "🇨🇳": "轻松入门：在 Mac 和 iPad 上创建动态电子表格",
-        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作動態試算表"
+        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作動態試算表",
+        "🇯🇵": "はじめよう：MacやiPadでダイナミックなスプレッドシートを作成しよう",
+        "🇹🇼": "輕鬆上手：在 Mac 和 iPad 上建立生動的試算表"
       },
       "slug": "get-started-build-dynamic-spreadsheets-on-mac-ipad"
     },
     "7181084018103648512": {
       "names": {
-        "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作有感染力的演示文稿"
+        "🇨🇳": "轻松入门：在 Mac 和 iPad 上制作有感染力的演示文稿",
+        "🇭🇰": "輕鬆上手：在 Mac 和 iPad 上製作超強簡報",
+        "🇯🇵": "はじめよう：MacやiPadでパワフルなプレゼンテーションを作成しよう",
+        "🇲🇴": "輕鬆上手：在 Mac 和 iPad 上製作超強簡報",
+        "🇹🇼": "輕鬆上手：在 Mac 和 iPad 上製作超強的簡報"
       },
       "slug": "get-started-make-powerful-presentations-mac-ipad"
-    },
-    "7181199528803336960": {
-      "names": {
-        "🇨🇳": "工作坊：跟着好瓶HowBottle 开启可持续创业之旅"
-      },
-      "slug": "workshop-howbottle-051124"
-    },
-    "7181576963587736320": {
-      "names": {
-        "🇨🇳": "谈话：与董磊探讨用影像之力促进人与自然和谐共生"
-      },
-      "slug": "talk-dong-lei-051824"
-    },
-    "7181907145041281280": {
-      "names": {
-        "🇨🇳": "焦点：碳、地球和你我"
-      },
-      "slug": "spotlight-planet-research-052624"
-    },
-    "7181953837631439104": {
-      "names": {
-        "🇨🇳": "工作坊：跟着余天一创作植物科学画"
-      },
-      "slug": "workshop-yu-tianyi-051824"
     },
     "7182699014352896256": {
       "names": {
@@ -323,128 +206,140 @@
       },
       "slug": "workshop-video-on-iphone-row"
     },
-    "7184396191378342144": {
+    "7189679785965879552": {
       "names": {
-        "🇨🇳": "谈话：与张辰亮探讨科普短视频创作"
+        "🇨🇳": "工作坊：以地球家园为灵感创作漫画",
+        "🇭🇰": "工作坊：創作以地球為靈感的漫畫",
+        "🇯🇵": "ワークショップ：地球をテーマにしたマンガを作ろう",
+        "🇲🇴": "工作坊：創作以地球為靈感的漫畫",
+        "🇹🇼": "工作坊：創作以地球為靈感的漫畫"
       },
-      "slug": "talk-zhang-chenliang-053124"
+      "slug": "workshop-create-comics-inspired-planet-earth"
     },
-    "7186834555545682176": {
+    "7270523016353513728": {
       "names": {
-        "🇹🇼": "輕鬆上手：在 iPhone 和 iPad 上製作 Podcast"
+        "🇨🇳": "儿童：创作爱心互动故事",
+        "🇭🇰": "小朋友：創作真善美的互動故事",
+        "🇯🇵": "キッズ：やさしさをテーマに、インタラクティブなストーリーを作ろう",
+        "🇲🇴": "小朋友：創作真善美的互動故事",
+        "🇹🇼": "孩童：創作關於善良美好的互動式故事"
       },
-      "slug": "get-started-podcasting-on-iphone-and-ipad"
+      "slug": "kids-create-interactive-story-of-kindness"
     },
-    "7187009957978865920": {
+    "7275337478256296192": {
       "names": {
-        "🇹🇼": "對談：和 WWDC Swift 學生挑戰賽台灣獲獎者活用 Swift 編碼"
+        "🇨🇳": "工作坊：在 iPad 上用 Apple Pencil 绘画",
+        "🇭🇰": "工作坊：在 iPad 上用 Apple Pencil 繪畫",
+        "🇯🇵": "ワークショップ：iPadとApple Pencilで絵を描こう",
+        "🇲🇴": "工作坊：在 iPad 上用 Apple Pencil 繪畫",
+        "🇹🇼": "工作坊：在 iPad 上用 Apple Pencil 畫畫"
       },
-      "slug": "talk-wwdc-winners-051124"
+      "slug": "workshop-drawing-with-apple-pencil-on-ipad-new"
     },
-    "7189085086816830464": {
+    "7301439666669846784": {
       "names": {
-        "🇨🇳": "焦点：王家超的高能人生与辅助功能"
+        "🇭🇰": "聚焦：Apple Intelligence",
+        "🇯🇵": "スポットライト：Apple Intelligence",
+        "🇲🇴": "聚焦：Apple Intelligence",
+        "🇹🇼": "聚焦：Apple Intelligence"
       },
-      "slug": "spotlight-wang-jiachao-051424"
+      "slug": "spotlight-apple-intelligence"
     },
-    "7189107631838363904": {
+    "7312958770773852672": {
       "names": {
-        "🇨🇳": "焦点：饿了么 App 的无障碍建设"
+        "🇨🇳": "工作坊：用 iPhone 拍出更精彩的照片",
+        "🇭🇰": "工作坊：用 iPhone 拍出更精彩的照片",
+        "🇲🇴": "工作坊：用 iPhone 拍出更精彩的照片",
+        "🇹🇼": "工作坊：用 iPhone 拍出更精彩的照片"
       },
-      "slug": "spotlight-eleme-051824"
+      "slug": "workshop-photos-on-iphone"
     },
-    "7191445667741860096": {
+    "7317686620114485504": {
       "names": {
-        "🇭🇰": "聚焦：透視林奕匡和黃妍一鏡過的音樂創作"
+        "🇭🇰": "聚焦：工作所需的強大功能",
+        "🇹🇼": "聚焦：工作必備的強大功能"
       },
-      "slug": "spotlight-phil-lam-cath-wong-051824"
+      "slug": "spotlight-powerful-features-for-work-ai"
     },
-    "7191992989219455488": {
+    "7317687957166326016": {
       "names": {
-        "🇯🇵": "スポットライト：佐藤慎介に学ぶ、スタートアップ成長の鍵とApple製品"
+        "🇨🇳": "焦点：强大的办公功能"
       },
-      "slug": "spotlight-shinsuke-sato-052124"
+      "slug": "spotlight-powerful-features-work"
     },
-    "7193162756185818112": {
+    "7318430248139063552": {
       "names": {
-        "🇨🇳": "焦点：叮铃玎玲的内容创作旅程与辅助功能"
+        "🇨🇳": "轻松入门：适用于聋人或听障人士的辅助功能"
       },
-      "slug": "spotlight-dingling-dingling-052524"
+      "slug": "get-started-deaf-hard-of-hearing-accessibility"
     },
-    "7196513795316285696": {
+    "7318432184972182016": {
       "names": {
-        "🇹🇼": "工作坊：和《童話裡都是騙人的》大聲說出你的驕傲故事 Part I (線上)"
+        "🇨🇳": "轻松入门：适用于视障人士的辅助功能"
       },
-      "slug": "workshop-whatever-you-say-part-1-061524"
+      "slug": "get-started-accessibility-features-vision-loss"
     },
-    "7196755181596737792": {
+    "7318433761401340160": {
       "names": {
-        "🇹🇼": "工作坊：和《童話裡都是騙人的》大聲說出你的驕傲故事 Part II"
+        "🇨🇳": "轻松入门：认知能力辅助功能"
       },
-      "slug": "workshop-whatever-you-say-part-2-063024"
+      "slug": "get-started-cognitive-accessibility-features"
     },
-    "7196809070014529792": {
+    "7322519581993304064": {
       "names": {
-        "🇹🇼": "工作坊：和薔薇一起創造自己的驕傲肖像封面"
+        "🇨🇳": "轻松入门：适用于行动不便人士的辅助功能",
+        "🇲🇴": "輕鬆上手：適用於行動不便人士的輔助使用功能"
       },
-      "slug": "workshop-chiang-weiii-062224"
+      "slug": "get-started-accessibility-features-reduced-mobility"
     },
-    "7198613966686683392": {
+    "7322865211546632192": {
       "names": {
-        "🇭🇰": "聚焦：與 Joya 透過獨立⾳樂探索共融"
+        "🇨🇳": "轻松入门：iPhone 和 iPad 的旁白功能",
+        "🇲🇴": "輕鬆上手：iPhone 和 iPad 的旁白功能"
       },
-      "slug": "spotlight-joya-060824"
+      "slug": "get-started-voiceover-on-iphone-ipad"
     },
-    "7201757326607810816": {
+    "7322871958420160512": {
       "names": {
-        "🇭🇰": "聚焦： 聽黃家正用古典樂奏出人生"
+        "🇨🇳": "轻松入门：Mac 的旁白功能"
       },
-      "slug": "spotlight-kajeng-wong-061924"
+      "slug": "get-started-voiceover-on-mac"
+    },
+    "7349654751443517440": {
+      "names": {
+        "🇨🇳": "儿童：用 iPad 执导一部关于友情的短片",
+        "🇭🇰": "小朋友：用 iPad 拍攝友情主題影片",
+        "🇲🇴": "小朋友：用 iPad 拍攝友情主題影片",
+        "🇹🇼": "孩童：用 iPad 拍出關於友情的獨創影片"
+      },
+      "slug": "kids-direct-your-friendship-film-on-ipad"
+    },
+    "7520995782066339840": {
+      "names": {
+        "🇯🇵": "トーク：トップクリエイターとライブで体感するPodcastの世界"
+      },
+      "slug": "talk-genkaitoppa-cotenradio-111326"
     }
   },
   "sitemap": {
-    "7202158586670514688": {
+    "7366948317962272768": {
       "names": {
-        "🇯🇵": "スポットライト：木本奏太に学ぶ、自分らしく生きるための表現方法"
+        "🇨🇳": "TBD",
+        "🇭🇰": "TBD",
+        "🇲🇴": "TBD"
       },
-      "slug": "spotlight-kanata-kimoto-062024"
+      "slug": "kids-draw-with-sneaky-sasquatch"
+    },
+    "7450676490436182016": {
+      "names": {
+        "🇨🇳": "Apple 夏令营：在 iPad 上创作超级英雄，执行救助任务",
+        "🇭🇰": "Apple Camp：在 iPad 上創造助人超級英雄",
+        "🇯🇵": "Appleサマーキャンプ：iPadを使って、頼れるスーパーヒーローのキャラクターをつくろう",
+        "🇲🇴": "Apple Camp：在 iPad 上創造助人超級英雄",
+        "🇹🇼": "Apple 夏令營：在 iPad 上打造助人超級英雄"
+      },
+      "slug": "apple-camp-fy26"
     }
   },
-  "collection": {
-    "kids-code-with-apple": {
-      "🇯🇵": "Code with Apple - 子ども向け"
-    }
-  },
-  "assure": {
-    "6443623163745894793": "music-skills-getting-started-garageband",
-    "6443627468649497481": "coding-skills-getting-started-swift-playgrounds",
-    "6444982776110088837": "video-skills-getting-started-imovie",
-    "6447624726684467553": "music-labs-making-theme-song",
-    "6455123986703286881": "art-lab-kids-drawing-emoji",
-    "6456668175656125061": "product-skills-accessibility-vision-loss",
-    "6456668939250140553": "product-skills-learning-literacy",
-    "6456669721362006917": "product-skills-accessibility-reduced-mobility",
-    "6456670232358257769": "product-skills-accessibility-hard-of-hearing",
-    "6456670804285162629": "product-skills-accessibility-deaf-community",
-    "6456671562162341225": "product-skills-using-voiceover-iphone-ipad",
-    "6456672052476478305": "product-skills-voiceover-mac",
-    "6858951078987006409": "virtual-session-for-kids-learn-to-code-1",
-    "6858953608756298441": "virtual-session-for-kids-learn-to-code-2",
-    "6858954953836036449": "virtual-session-for-kids-lights-camera-code",
-    "6871610251075748217": "skills-your-kids-and-their-devices",
-    "6935143355421393229": "video-tour-capturing-cinematic-shots",
-    "6937477895578026701": "photo-tour-portraits-on-location",
-    "6937543655042154953": "photo-tour-framing-architecture",
-    "6978470336413925785": "coding-lab-code-your-first-app",
-    "6980220449524122013": "virtual-session-create-powerful-presentations-keynote-2",
-    "6998886952200929536": "skills-taking-charge-privacy-on-iphone",
-    "7079594530974826752": "get-started-ipad",
-    "7079597360792043776": "get-started-mac",
-    "7079604719065071872": "get-started-iphone",
-    "7080116838067962112": "workshop-drawing-with-apple-pencil-on-ipad",
-    "7080296783197077760": "workshop-photography-on-iphone",
-    "7132826764783223552": "get-started-apple-watch-112723",
-    "7151722304698679808": "video-tour-capturing-cinematic-shots-0210224",
-    "7182699014352896256": "workshop-video-on-iphone-row"
-  }
+  "collection": {}
 }
